@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<link rel="icon" type="image/svg+xml" 
+href="https://em-content.zobj.net/source/emojidex/107/christmas-tree_1f384.png" />
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kerstkaart</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Verdana', sans-serif;
+        background: #0d1b2a;
+        overflow: hidden;
+    }
+
+    /* --- Sneeuw --- */
+    .snowflake {
+        position: fixed;
+        top: -10px;
+        color: white;
+        font-size: 1em;
+        opacity: 0.8;
+        pointer-events: none;
+        animation-name: fall;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+    }
+    @keyframes fall {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(110vh); }
+    }
+
+    /* --- Enveloppe container --- */
+    #envelopeContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 320px;
+        height: 220px;
+        cursor: pointer;
+        animation: fadeIn 2s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* --- Enveloppe --- */
+    .envelope {
+        width: 100%;
+        height: 100%;
+        background: #d62828;
+        position: relative;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .flap {
+        width: 100%;
+        height: 100%;
+        background: #e63946;
+        clip-path: polygon(0 0, 100% 0, 50% 60%);
+        transform-origin: top;
+        transition: transform 1s ease;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .open .flap {
+        transform: rotateX(180deg);
+    }
+
+    /* --- Kaart die uit de enveloppe schuift --- */
+    #card {
+        width: 100%;
+        height: 100%;
+        background: white;
+        border-radius: 6px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        padding: 20px;
+        box-sizing: border-box;
+        text-align: center;
+        transition: top 1.5s ease;
+    }
+
+    .open #card {
+        top: 0;
+    }
+
+    #content {
+        opacity: 0;
+        transition: opacity 2s ease;
+        margin-top: 40px;
+    }
+
+    /* --- Interactieve kerstbal --- */
+    #ball {
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle, #ffcc00, #d4a300);
+        border-radius: 50%;
+        margin: 20px auto;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    #ball:hover {
+        transform: scale(1.1) rotate(10deg);
+    }
+
+    /* Lampjes effect */
+    #lights {
+        margin-top: 15px;
+        font-size: 22px;
+        letter-spacing: 2px;
+    }
+
+    .light {
+        animation: glow 1s infinite alternate;
+    }
+
+    @keyframes glow {
+        from { color: #ff4747; }
+        to { color: #ffd700; }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 Muziek automatisch afspelen -->
+<audio id="bgMusic" src="x-mas.mp3" autoplay loop></audio>
+
+<script>
+    // extra start voor mobiele toestellen
+    document.addEventListener('click', function startMusic() {
+        const audio = document.getElementById('bgMusic');
+        audio.play().catch(()=>{});
+        document.removeEventListener('click', startMusic);
+    });
+</script>
+
+<!-- Sneeuw genereren via JS -->
+
+<div id="envelopeContainer" onclick="openEnvelope()">
+    <div class="envelope" id="envelope">
+        <div class="flap"></div>
+        <div id="card">
+            <h2>✨ Vrolijke Kerstdagen! ✨</h2>
+            <p>Klik op de kerstbal voor een verrassing!</p>
+
+            <div id="ball" onclick="ballClicked(event)"></div>
+
+            <div id="lights">
+                <span class="light">★</span>
+                <span class="light">★</span>
+                <span class="light">★</span>
+            </div>
+
+            <div id="content">
+                <h3>🎄 Een prachtig nieuw jaar gewenst!</h3>
+                <p>Veel liefde, geluk en warmte!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+/* --- Enveloppe animatie --- */
+function openEnvelope() {
+    const envelope = document.getElementById('envelope');
+    envelope.classList.add('open');
+
+    // Kaart pas tonen na opening
+    setTimeout(() => {
+        document.getElementById('content').style.opacity = "1";
+    }, 1500);
+}
+
+/* --- Kerstbal interactie --- */
+function ballClicked(event) {
+    event.stopPropagation(); // voorkomt dat enveloppe opnieuw klapt
+
+    alert("🎁 Fijne Kerst! En een gellukig nieuwjaar!🎁");
+}
+
+/* --- Sneeuw creëren --- */
+function createSnow() {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.innerHTML = '❄';
+
+    snowflake.style.left = Math.random() * 100 + 'vw';
+    snowflake.style.animationDuration = (5 + Math.random() * 5) + 's';
+    snowflake.style.fontSize = (10 + Math.random() * 20) + 'px';
+
+    document.body.appendChild(snowflake);
+
+    setTimeout(() => snowflake.remove(), 10000);
+}
+setInterval(createSnow, 150);
+</script>
+
+</body>
+</html>
